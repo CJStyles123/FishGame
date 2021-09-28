@@ -1,0 +1,18 @@
+local LocalPlayer = game:GetService("Players").LocalPlayer
+OldNamecall = hookmetamethod(game, "__namecall", function(self, ...)
+      local args = {...}
+      local method = getnamecallmethod()
+
+      if tostring(self) == "Kick" and method == "FireServer" then
+          args[1] = wait()
+          return self.FireServer(self, unpack(args))
+end
+return OldNamecall(self, ...)
+end)
+
+function onCharacterAdded()
+LocalPlayer.Character.SprintScript.Disabled = true
+end
+
+onCharacterAdded()
+LocalPlayer.CharacterAdded:Connect(onCharacterAdded)
