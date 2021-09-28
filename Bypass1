@@ -1,0 +1,19 @@
+loadstring(game:HttpGet("https://irisapp.ca/api/Scripts/IrisBetterCompat.lua"))()
+local LocalPlayer = game:GetService("Players").LocalPlayer
+local HasFunc = HasFunction("getconnections")
+
+if not HasFunc then
+LocalPlayer:Kick("Missing getconnections!")
+return
+end
+
+function onCharacterAdded()
+LocalPlayer.Character.SprintScript.Disabled = true
+for i,v in pairs(getconnections(LocalPlayer.Character.Humanoid.Changed)) do
+v:Disable()
+wait()
+end
+end
+
+onCharacterAdded()
+LocalPlayer.CharacterAdded:Connect(onCharacterAdded)
