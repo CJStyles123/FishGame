@@ -19,23 +19,18 @@ Title = "Fish Game";
 Duration = duration;
 });
 end
-end
 
 Controls:Disable()
 
 game.Players.LocalPlayer.Character:BreakJoints()
-if gameToggles.AllowNotifications then
 notify("Reseted to ensure your Game Data loaded in...",5)
-end
 
 game:GetService("Workspace").Game1.Clock.SurfaceGui.Frame.Counter.Changed:Connect(function(getchanged)
 if getchanged == "Text" and game:GetService("Workspace").Game1.Clock.SurfaceGui.Frame.Counter.Text == gameSettings.RedLightGreenLightTime and game.Players.LocalPlayer.Character.Humanoid.Health ~= 0 and (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - game:GetService("Workspace").Lobby.Respawn.Position).magnitude > 150 then
 game:GetService("Workspace")["Meshes/SM_Env_Tree_Dead_04"].CanCollide = false
 game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = gameSettings.TreeCFrame
 gameSettings.GotToEnd = true
-if gameToggles.AllowNotifications then
 notify("Teleported to the end. Please <b><font color=\"rgb(245, 205, 48)\">WAIT</font></b> until the round is over to get your win.",15)
-end
 end
 end)
 
@@ -49,17 +44,13 @@ game:GetService("Workspace").Game1.StartWall.Changed:Connect(function(getchanged
 if getchanged == "CanCollide" and game:GetService("Workspace").Game1.StartWall.CanCollide == false and (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - game:GetService("Workspace").Lobby.Respawn.Position).magnitude > 150 then
 gameSettings.gameRunning = true
 gameSettings.PlayerWinsText = game:GetService("Players").LocalPlayer.PlayerGui.ScreenGui.Sub.Stats.Rank.Winst.Text
-if gameToggles.AllowNotifications then
 notify("Round Started, Teleporting at <b><font color=\"rgb(245, 205, 48)\">2:00</font></b>...",20)
-end
 end
 end)
 
 game:GetService("Players").LocalPlayer.PlayerGui.ScreenGui.Sub.Stats.Rank.Winst.Changed:Connect(function(getchanged)
 if getchanged == "Text" and gameSettings.PlayerWinsText ~= game:GetService("Players").LocalPlayer.PlayerGui.ScreenGui.Sub.Stats.Rank.Winst.Text and gameSettings.GotToEnd then
-if gameToggles.AllowNotifications then
 notify("Round over, You have <b><font color=\"rgb(245, 205, 48)\">gained</font></b> a win...\nOld Score: "..gameSettings.PlayerWinsText.." | New Score: "..game:GetService("Players").LocalPlayer.PlayerGui.ScreenGui.Sub.Stats.Rank.Winst.Text,20)
-end
 gameSettings.gameRunning = false
 gameSettings.GotToEnd = false
 end
