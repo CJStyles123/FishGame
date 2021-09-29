@@ -12,8 +12,8 @@ TreeCFrame = CFrame.new(304, 6, -1111),
 }
 
 local Notify = AkaliNotif.Notify;
-if gameToggles.AllowNotifications then
 function notify(text,duration)
+if gameToggles.AllowNotifications then
 Notify({
 Description = text;
 Title = "Fish Game";
