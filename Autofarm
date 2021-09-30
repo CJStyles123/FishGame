@@ -7,8 +7,10 @@ gameRunning = false,
 GotToEnd = false,
 PlayerWinsText,
 RedLightGreenLightTime = "1:30",
+BloodRisingTime = "1:30",
 PadCFrame = CFrame.new(-171, 13, -666),
 TreeCFrame = CFrame.new(304, 6, -1111),
+BloodRisingEnd = CFrame.new(1595, 275, 837)
 }
 
 local Notify = AkaliNotif.Notify;
@@ -20,13 +22,19 @@ Duration = duration;
 });
 end
 
+-- // It's to avoid being killed...
+pcall(function()
+game:GetService("Workspace").BloodRising.Blood:Destroy()
+end)
+
 Controls:Disable()
 
 game.Players.LocalPlayer.Character:BreakJoints()
-notify("Reseted to ensure your Game Data loaded in...",5)
+notify("Before Autofarming, Let me reset your Character just incase your data hasn't loaded in yet...",5)
 
+-- // Checking the time for Red Light, Green Light and teleporting on time...
 game:GetService("Workspace").Game1.Clock.SurfaceGui.Frame.Counter.Changed:Connect(function(getchanged)
-if getchanged == "Text" and game:GetService("Workspace").Game1.Clock.SurfaceGui.Frame.Counter.Text == gameSettings.RedLightGreenLightTime and game.Players.LocalPlayer.Character.Humanoid.Health ~= 0 and (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - game:GetService("Workspace").Lobby.Respawn.Position).magnitude > 150 then
+if getchanged == "Text" and game:GetService("Workspace").Game1.Clock.SurfaceGui.Frame.Counter.Text == gameSettings.RedLightGreenLightTime and game:GetService("Workspace").Lobby.Details2.SurfaceGui.Frame.Title.Text ~= "Blood Rising" and game.Players.LocalPlayer.Character.Humanoid.Health ~= 0 and (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - game:GetService("Workspace").Lobby.Respawn.Position).magnitude > 150 then
 game:GetService("Workspace")["Meshes/SM_Env_Tree_Dead_04"].CanCollide = false
 game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = gameSettings.TreeCFrame
 gameSettings.GotToEnd = true
@@ -34,22 +42,43 @@ notify("Teleported to the end. Please <b><font color=\"rgb(245, 205, 48)\">WAIT<
 end
 end)
 
+-- // Checking the time for Blood Rising and teleporting on time...
+game:GetService("Workspace").BloodRising.Clock1.SurfaceGui.Frame.Counter.Changed:Connect(function(getchanged)
+if getchanged == "Text" and game:GetService("Workspace").BloodRising.Clock1.SurfaceGui.Frame.Counter.Text == gameSettings.BloodRisingTime and game:GetService("Workspace").Lobby.Details2.SurfaceGui.Frame.Title.Text == "Blood Rising" and game.Players.LocalPlayer.Character.Humanoid.Health ~= 0  and (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - game:GetService("Workspace").Lobby.Respawn.Position).magnitude > 150 then
+game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = gameSettings.BloodRisingEnd
+gameSettings.GotToEnd = true
+notify("Teleported to the end. Please <b><font color=\"rgb(245, 205, 48)\">WAIT</font></b> until the round is over to get your win.",15)
+end
+end)
+
+-- // Teleporting to the Pad to begin Autofarm...
 game:GetService("RunService").RenderStepped:Connect(function()
 if (game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").Position - game:GetService("Workspace").Lobby.Respawn.Position).magnitude < 150 then --// Checking if you are at spawn and not in game
 game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = gameSettings.PadCFrame
 end
 end)
 
+-- // RedLightGreenLight Wall CanCollide Detection...
 game:GetService("Workspace").Game1.StartWall.Changed:Connect(function(getchanged)
-if getchanged == "CanCollide" and game:GetService("Workspace").Game1.StartWall.CanCollide == false and (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - game:GetService("Workspace").Lobby.Respawn.Position).magnitude > 150 then
+if getchanged == "CanCollide" and game:GetService("Workspace").Game1.StartWall.CanCollide == false and game:GetService("Workspace").Lobby.Details2.SurfaceGui.Frame.Title.Text ~= "Blood Rising" and (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - game:GetService("Workspace").Lobby.Respawn.Position).magnitude > 150 then
 gameSettings.gameRunning = true
 gameSettings.PlayerWinsText = game:GetService("Players").LocalPlayer.PlayerGui.ScreenGui.Sub.Stats.Rank.Winst.Text
-notify("Round Started, Teleporting at <b><font color=\"rgb(245, 205, 48)\">2:00</font></b>...",20)
+notify("Round Started, Teleporting at <b><font color=\"rgb(245, 205, 48)\">1:30</font></b>...",20)
 end
 end)
 
+-- // BloodRising Wall CanCollide Detection...
+game:GetService("Workspace").BloodRising.StartWall2.Changed:Connect(function(getchanged)
+if getchanged == "CanCollide" and game:GetService("Workspace").BloodRising.StartWall2.CanCollide == false and game:GetService("Workspace").Lobby.Details2.SurfaceGui.Frame.Title.Text == "Blood Rising" and (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - game:GetService("Workspace").Lobby.Respawn.Position).magnitude > 150 then
+gameSettings.gameRunning = true
+gameSettings.PlayerWinsText = game:GetService("Players").LocalPlayer.PlayerGui.ScreenGui.Sub.Stats.Rank.Winst.Text
+notify("Round Started, Teleporting at <b><font color=\"rgb(245, 205, 48)\">1:30</font></b>...",55)
+end
+end)
+
+-- // This is how we determine when the round is over and our win was given...
 game:GetService("Players").LocalPlayer.PlayerGui.ScreenGui.Sub.Stats.Rank.Winst.Changed:Connect(function(getchanged)
-if getchanged == "Text" and gameSettings.PlayerWinsText ~= game:GetService("Players").LocalPlayer.PlayerGui.ScreenGui.Sub.Stats.Rank.Winst.Text and gameSettings.GotToEnd then
+if getchanged == "Text" and gameSettings.PlayerWinsText ~= game:GetService("Players").LocalPlayer.PlayerGui.ScreenGui.Sub.Stats.Rank.Winst.Text and gameSettings.gameRunning and gameSettings.GotToEnd then
 notify("Round over, You have <b><font color=\"rgb(245, 205, 48)\">gained</font></b> a win...\nOld Score: "..gameSettings.PlayerWinsText.." | New Score: "..game:GetService("Players").LocalPlayer.PlayerGui.ScreenGui.Sub.Stats.Rank.Winst.Text,20)
 gameSettings.gameRunning = false
 gameSettings.GotToEnd = false
