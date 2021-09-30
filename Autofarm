@@ -6,7 +6,7 @@ local gameSettings = {
 gameRunning = false,
 GotToEnd = false,
 PlayerWinsText,
-RedLightGreenLightTime = "2:00",
+RedLightGreenLightTime = "1:30",
 PadCFrame = CFrame.new(-171, 13, -666),
 TreeCFrame = CFrame.new(304, 6, -1111),
 }
