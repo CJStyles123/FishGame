@@ -26,9 +26,9 @@ end
 
 -- // It's to avoid being killed...
 pcall(function()
+game:GetService("Workspace").Game2.Walls:Destroy()
 game:GetService("Workspace").Game2.DeathPit:Destroy()
 game:GetService("Workspace").BloodRising.Blood:Destroy()
-game:GetService("Workspace").Game2.Walls:Destroy()
 end)
 
 Controls:Disable()
