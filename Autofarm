@@ -7,9 +7,11 @@ gameRunning = false,
 GotToEnd = false,
 PlayerWinsText,
 RedLightGreenLightTime = "1:30",
+ShapesTime = "0:00",
 BloodRisingTime = "1:30",
 PadCFrame = CFrame.new(-171, 13, -666),
 TreeCFrame = CFrame.new(304, 6, -1111),
+ShapeCFrame = CFrame.new(-846, 115, 491),
 BloodRisingEnd = CFrame.new(1595, 275, 837)
 }
 
@@ -24,7 +26,9 @@ end
 
 -- // It's to avoid being killed...
 pcall(function()
+game:GetService("Workspace").Game2.DeathPit:Destroy()
 game:GetService("Workspace").BloodRising.Blood:Destroy()
+game:GetService("Workspace").Game2.Walls:Destroy()
 end)
 
 Controls:Disable()
@@ -39,6 +43,17 @@ game:GetService("Workspace")["Meshes/SM_Env_Tree_Dead_04"].CanCollide = false
 game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = gameSettings.TreeCFrame
 gameSettings.GotToEnd = true
 notify("Teleported to the end. Please <b><font color=\"rgb(245, 205, 48)\">WAIT</font></b> until the round is over to get your win.",15)
+end
+end)
+
+-- // Checking the time for Shapes and teleporting on time (checks if game running here instead of collision detection for it)...
+game:GetService("Workspace").Game2.Clock.SurfaceGui.Frame.Counter.Changed:Connect(function(getchanged)
+if getchanged == "Text" and game:GetService("Workspace").Game2.Clock.SurfaceGui.Frame.Counter.Text == gameSettings.ShapesTime and game:GetService("Workspace").Lobby.Details2.SurfaceGui.Frame.Title.Text == "Day 2" and not gameSettings.gameRunning and game.Players.LocalPlayer.Character.Humanoid.Health ~= 0 and (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - game:GetService("Workspace").Lobby.Respawn.Position).magnitude > 150 then
+game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = gameSettings.ShapeCFrame
+gameSettings.gameRunning = true
+gameSettings.GotToEnd = true
+gameSettings.PlayerWinsText = game:GetService("Players").LocalPlayer.PlayerGui.ScreenGui.Sub.Stats.Rank.Winst.Text
+notify("Please <b><font color=\"rgb(245, 205, 48)\">WAIT</font></b> until the round is over to get your win.",15)
 end
 end)
 
@@ -63,7 +78,7 @@ game:GetService("Workspace").Game1.StartWall.Changed:Connect(function(getchanged
 if getchanged == "CanCollide" and game:GetService("Workspace").Game1.StartWall.CanCollide == false and game:GetService("Workspace").Lobby.Details2.SurfaceGui.Frame.Title.Text ~= "Blood Rising" and (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - game:GetService("Workspace").Lobby.Respawn.Position).magnitude > 150 then
 gameSettings.gameRunning = true
 gameSettings.PlayerWinsText = game:GetService("Players").LocalPlayer.PlayerGui.ScreenGui.Sub.Stats.Rank.Winst.Text
-notify("Round Started, Teleporting at <b><font color=\"rgb(245, 205, 48)\">1:30</font></b>...",20)
+notify("Round Started, Teleporting at <b><font color=\"rgb(245, 205, 48)\">1:30</font></b>...",50)
 end
 end)
 
