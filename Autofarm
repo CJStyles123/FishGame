@@ -57,7 +57,7 @@ end)
 
 -- // Checking the time for Red Light, Green Light and teleporting on time...
 Variables.GetRLGLClock.SurfaceGui.Frame.Counter.Changed:Connect(function(getchanged)
-if getchanged == "Text" and Variables.GetRLGLClock.SurfaceGui.Frame.Counter.Text == gameSettings.RedLightGreenLightTime and Variables.GetLobby.Details2.SurfaceGui.Frame.Title.Text ~= "Blood Rising" and LocalPlayer.Character.Humanoid.Health ~= 0 and (LocalPlayer.Character.HumanoidRootPart.Position - GetLobby.Respawn.Position).magnitude > 200 then
+if getchanged == "Text" and Variables.GetRLGLClock.SurfaceGui.Frame.Counter.Text == gameSettings.RedLightGreenLightTime and Variables.GetLobby.Details2.SurfaceGui.Frame.Title.Text ~= "Blood Rising" and LocalPlayer.Character.Humanoid.Health ~= 0 and (LocalPlayer.Character.HumanoidRootPart.Position - Variables.GetLobby.Respawn.Position).magnitude > 200 then
 workspace["Meshes/SM_Env_Tree_Dead_04"].CanCollide = false
 LocalPlayer.Character.HumanoidRootPart.CFrame = gameSettings.TreeCFrame
 gameSettings.GotToEnd = true
