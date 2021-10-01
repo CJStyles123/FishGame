@@ -1,5 +1,7 @@
 local AkaliNotif = loadstring(game:HttpGet("https://raw.githubusercontent.com/Kinlei/Dynissimo/main/Scripts/AkaliNotif.lua"))()
-local PlayerModule = require(game.Players.LocalPlayer.PlayerScripts:WaitForChild("PlayerModule"))
+local LocalPlayer = game:GetService("Players").LocalPlayer
+local RunService = game:GetService("RunService")
+local PlayerModule = require(LocalPlayer.PlayerScripts:WaitForChild("PlayerModule"))
 local Controls = PlayerModule:GetControls()
 
 local gameSettings = {
@@ -15,6 +17,17 @@ ShapeCFrame = CFrame.new(-846, 115, 491),
 BloodRisingEnd = CFrame.new(1595, 275, 837)
 }
 
+local Variables = {
+GetLobby = workspace.Lobby,
+GetRLGL = workspace.Game1,
+GetRLGLClock = workspace.Game1.Clock,
+GetShapes = workspace.Game2,
+GetShapesClock = workspace.Game2.Clock,
+GetBR = workspace.BloodRising,
+GetBRClock = workspace.BloodRising.Clock1
+}
+
+
 local Notify = AkaliNotif.Notify;
 function notify(text,duration)
 Notify({
@@ -26,75 +39,75 @@ end
 
 -- // It's to avoid being killed...
 pcall(function()
-game:GetService("Workspace").Game2.Walls:Destroy()
-game:GetService("Workspace").Game2.DeathPit:Destroy()
-game:GetService("Workspace").BloodRising.Blood:Destroy()
+Variables.GetShapes.Walls:Destroy()
+Variables.GetShapes.DeathPit:Destroy()
+Variables.GetBR.Blood:Destroy()
 end)
 
 Controls:Disable()
 
-game.Players.LocalPlayer.Character:BreakJoints()
+LocalPlayer.Character:BreakJoints()
 notify("Before Autofarming, Let me reset your Character just incase your data hasn't loaded in yet...",5)
 
+-- // Teleporting to the Pad to begin Autofarm...
+RunService.RenderStepped:Connect(function()
+if (LocalPlayer.Character:WaitForChild("HumanoidRootPart").Position - Variables.GetLobby.Respawn.Position).magnitude < 200 then --// Checking if you are at spawn and not in game
+LocalPlayer.Character.HumanoidRootPart.CFrame = gameSettings.PadCFrame
+end
+end)
+
 -- // Checking the time for Red Light, Green Light and teleporting on time...
-game:GetService("Workspace").Game1.Clock.SurfaceGui.Frame.Counter.Changed:Connect(function(getchanged)
-if getchanged == "Text" and game:GetService("Workspace").Game1.Clock.SurfaceGui.Frame.Counter.Text == gameSettings.RedLightGreenLightTime and game:GetService("Workspace").Lobby.Details2.SurfaceGui.Frame.Title.Text ~= "Blood Rising" and game.Players.LocalPlayer.Character.Humanoid.Health ~= 0 and (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - game:GetService("Workspace").Lobby.Respawn.Position).magnitude > 150 then
-game:GetService("Workspace")["Meshes/SM_Env_Tree_Dead_04"].CanCollide = false
-game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = gameSettings.TreeCFrame
+Variables.GetRLGLClock.SurfaceGui.Frame.Counter.Changed:Connect(function(getchanged)
+if getchanged == "Text" and Variables.GetRLGLClock.SurfaceGui.Frame.Counter.Text == gameSettings.RedLightGreenLightTime and Variables.GetLobby.Details2.SurfaceGui.Frame.Title.Text ~= "Blood Rising" and LocalPlayer.Character.Humanoid.Health ~= 0 and (LocalPlayer.Character.HumanoidRootPart.Position - GetLobby.Respawn.Position).magnitude > 200 then
+workspace["Meshes/SM_Env_Tree_Dead_04"].CanCollide = false
+LocalPlayer.Character.HumanoidRootPart.CFrame = gameSettings.TreeCFrame
 gameSettings.GotToEnd = true
 notify("Teleported to the end. Please <b><font color=\"rgb(245, 205, 48)\">WAIT</font></b> until the round is over to get your win.",15)
 end
 end)
 
 -- // Checking the time for Shapes and teleporting on time (checks if game running here instead of collision detection for it)...
-game:GetService("Workspace").Game2.Clock.SurfaceGui.Frame.Counter.Changed:Connect(function(getchanged)
-if getchanged == "Text" and game:GetService("Workspace").Game2.Clock.SurfaceGui.Frame.Counter.Text == gameSettings.ShapesTime and game:GetService("Workspace").Lobby.Details2.SurfaceGui.Frame.Title.Text == "Day 2" and not gameSettings.gameRunning and game.Players.LocalPlayer.Character.Humanoid.Health ~= 0 and (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - game:GetService("Workspace").Lobby.Respawn.Position).magnitude > 150 then
-game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = gameSettings.ShapeCFrame
+Variables.GetShapesClock.SurfaceGui.Frame.Counter.Changed:Connect(function(getchanged)
+if getchanged == "Text" and Variables.GetShapesClock.SurfaceGui.Frame.Counter.Text == gameSettings.ShapesTime and Variables.GetLobby.Details2.SurfaceGui.Frame.Title.Text == "Day 2" and not gameSettings.gameRunning and LocalPlayer.Character.Humanoid.Health ~= 0 and (LocalPlayer.Character.HumanoidRootPart.Position - Variables.GetLobby.Respawn.Position).magnitude > 200 then
+LocalPlayer.Character.HumanoidRootPart.CFrame = gameSettings.ShapeCFrame
 gameSettings.gameRunning = true
 gameSettings.GotToEnd = true
-gameSettings.PlayerWinsText = game:GetService("Players").LocalPlayer.PlayerGui.ScreenGui.Sub.Stats.Rank.Winst.Text
+gameSettings.PlayerWinsText = LocalPlayer.PlayerGui.ScreenGui.Sub.Stats.Rank.Winst.Text
 notify("Please <b><font color=\"rgb(245, 205, 48)\">WAIT</font></b> until the round is over to get your win.",15)
 end
 end)
 
 -- // Checking the time for Blood Rising and teleporting on time...
-game:GetService("Workspace").BloodRising.Clock1.SurfaceGui.Frame.Counter.Changed:Connect(function(getchanged)
-if getchanged == "Text" and game:GetService("Workspace").BloodRising.Clock1.SurfaceGui.Frame.Counter.Text == gameSettings.BloodRisingTime and game:GetService("Workspace").Lobby.Details2.SurfaceGui.Frame.Title.Text == "Blood Rising" and game.Players.LocalPlayer.Character.Humanoid.Health ~= 0  and (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - game:GetService("Workspace").Lobby.Respawn.Position).magnitude > 150 then
-game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = gameSettings.BloodRisingEnd
+Variables.GetBRClock.SurfaceGui.Frame.Counter.Changed:Connect(function(getchanged)
+if getchanged == "Text" and Variables.GetBRClock.SurfaceGui.Frame.Counter.Text == gameSettings.BloodRisingTime and Variables.GetLobby.Details2.SurfaceGui.Frame.Title.Text == "Blood Rising" and LocalPlayer.Character.Humanoid.Health ~= 0  and (LocalPlayer.Character.HumanoidRootPart.Position - Variables.GetLobby.Respawn.Position).magnitude > 200 then
+LocalPlayer.Character.HumanoidRootPart.CFrame = gameSettings.BloodRisingEnd
 gameSettings.GotToEnd = true
 notify("Teleported to the end. Please <b><font color=\"rgb(245, 205, 48)\">WAIT</font></b> until the round is over to get your win.",15)
 end
 end)
 
--- // Teleporting to the Pad to begin Autofarm...
-game:GetService("RunService").RenderStepped:Connect(function()
-if (game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").Position - game:GetService("Workspace").Lobby.Respawn.Position).magnitude < 150 then --// Checking if you are at spawn and not in game
-game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = gameSettings.PadCFrame
-end
-end)
-
 -- // RedLightGreenLight Wall CanCollide Detection...
-game:GetService("Workspace").Game1.StartWall.Changed:Connect(function(getchanged)
-if getchanged == "CanCollide" and game:GetService("Workspace").Game1.StartWall.CanCollide == false and game:GetService("Workspace").Lobby.Details2.SurfaceGui.Frame.Title.Text ~= "Blood Rising" and (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - game:GetService("Workspace").Lobby.Respawn.Position).magnitude > 150 then
+Variables.GetRLGL.StartWall.Changed:Connect(function(getchanged)
+if getchanged == "CanCollide" and Variables.GetRLGL.StartWall.CanCollide == false and Variables.GetLobby.Details2.SurfaceGui.Frame.Title.Text ~= "Blood Rising" and (LocalPlayer.Character.HumanoidRootPart.Position - Variables.GetLobby.Respawn.Position).magnitude > 200 then
 gameSettings.gameRunning = true
-gameSettings.PlayerWinsText = game:GetService("Players").LocalPlayer.PlayerGui.ScreenGui.Sub.Stats.Rank.Winst.Text
+gameSettings.PlayerWinsText = LocalPlayer.PlayerGui.ScreenGui.Sub.Stats.Rank.Winst.Text
 notify("Round Started, Teleporting at <b><font color=\"rgb(245, 205, 48)\">1:30</font></b>...",50)
 end
 end)
 
 -- // BloodRising Wall CanCollide Detection...
-game:GetService("Workspace").BloodRising.StartWall2.Changed:Connect(function(getchanged)
-if getchanged == "CanCollide" and game:GetService("Workspace").BloodRising.StartWall2.CanCollide == false and game:GetService("Workspace").Lobby.Details2.SurfaceGui.Frame.Title.Text == "Blood Rising" and (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - game:GetService("Workspace").Lobby.Respawn.Position).magnitude > 150 then
+Variables.GetBR.StartWall2.Changed:Connect(function(getchanged)
+if getchanged == "CanCollide" and workspace.BloodRising.StartWall2.CanCollide == false and Variables.GetLobby.Details2.SurfaceGui.Frame.Title.Text == "Blood Rising" and (LocalPlayer.Character.HumanoidRootPart.Position - Variables.GetLobby.Respawn.Position).magnitude > 200 then
 gameSettings.gameRunning = true
-gameSettings.PlayerWinsText = game:GetService("Players").LocalPlayer.PlayerGui.ScreenGui.Sub.Stats.Rank.Winst.Text
+gameSettings.PlayerWinsText = LocalPlayer.PlayerGui.ScreenGui.Sub.Stats.Rank.Winst.Text
 notify("Round Started, Teleporting at <b><font color=\"rgb(245, 205, 48)\">1:30</font></b>...",55)
 end
 end)
 
 -- // This is how we determine when the round is over and our win was given...
-game:GetService("Players").LocalPlayer.PlayerGui.ScreenGui.Sub.Stats.Rank.Winst.Changed:Connect(function(getchanged)
-if getchanged == "Text" and gameSettings.PlayerWinsText ~= game:GetService("Players").LocalPlayer.PlayerGui.ScreenGui.Sub.Stats.Rank.Winst.Text and gameSettings.gameRunning and gameSettings.GotToEnd then
-notify("Round over, You have <b><font color=\"rgb(245, 205, 48)\">gained</font></b> a win...\nOld Score: "..gameSettings.PlayerWinsText.." | New Score: "..game:GetService("Players").LocalPlayer.PlayerGui.ScreenGui.Sub.Stats.Rank.Winst.Text,20)
+LocalPlayer.PlayerGui.ScreenGui.Sub.Stats.Rank.Winst.Changed:Connect(function(getchanged)
+if getchanged == "Text" and gameSettings.PlayerWinsText ~= LocalPlayer.PlayerGui.ScreenGui.Sub.Stats.Rank.Winst.Text and gameSettings.gameRunning and gameSettings.GotToEnd then
+notify("Round over, You have <b><font color=\"rgb(245, 205, 48)\">gained</font></b> a win...\nOld Score: "..gameSettings.PlayerWinsText.." | New Score: "..LocalPlayer.PlayerGui.ScreenGui.Sub.Stats.Rank.Winst.Text,20)
 gameSettings.gameRunning = false
 gameSettings.GotToEnd = false
 end
