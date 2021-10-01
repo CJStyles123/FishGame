@@ -27,7 +27,6 @@ GetBR = workspace.BloodRising,
 GetBRClock = workspace.BloodRising.Clock1
 }
 
-
 local Notify = AkaliNotif.Notify;
 function notify(text,duration)
 Notify({
