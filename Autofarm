@@ -37,13 +37,6 @@ Duration = duration;
 });
 end
 
--- // It's to avoid being killed...
-pcall(function()
-Variables.GetShapes.Walls:Destroy()
-Variables.GetShapes.DeathPit:Destroy()
-Variables.GetBR.Blood:Destroy()
-end)
-
 if (LocalPlayer.Character:WaitForChild("HumanoidRootPart").Position - workspace.Lobby.Respawn.Position).magnitude < 200 and LocalPlayer.Character.Humanoid.Health ~= 0 then --// Checking if you are at spawn and not in game
 Controls:Disable()
 LocalPlayer.Character:BreakJoints()
@@ -52,6 +45,13 @@ elseif (LocalPlayer.Character:WaitForChild("HumanoidRootPart").Position - worksp
 notify("Execute when you're back at Lobby, I don't want to ruin your experience in the game...",5)
 return
 end
+
+-- // It's to avoid being killed...
+pcall(function()
+Variables.GetShapes.Walls:Destroy()
+Variables.GetShapes.DeathPit:Destroy()
+Variables.GetBR.Blood:Destroy()
+end)
 
 -- // Teleporting to the Pad to begin Autofarm...
 RunService.RenderStepped:Connect(function()
