@@ -52,7 +52,6 @@ notify("Before Autofarming, Let me reset your Character just incase your data ha
 game.Players.LocalPlayer.CharacterAdded:Wait()
 gameSettings.autoFarmReady = true
 
-
 -- // Teleporting to the Pad to begin Autofarm...
 RunService.RenderStepped:Connect(function()
 if Variables.GetLobbyMagnitude < 200 and gameSettings.autoFarmReady then -- // Checking if you are at spawn and if autoFarm is ready
