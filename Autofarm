@@ -29,14 +29,12 @@ GetBRClock = workspace.BloodRising.Clock1
 }
 
 local Notify = AkaliNotif.Notify;
-function notify(text,duration,important)
-if important or getgenv().Notifications then
+function notify(text,duration)
 Notify({
 Description = text;
 Title = "Fish Game";
 Duration = duration;
 });
-end
 end
 
 -- // It's to avoid being killed...
@@ -49,9 +47,9 @@ end)
 if (LocalPlayer.Character:WaitForChild("HumanoidRootPart").Position - workspace.Lobby.Respawn.Position).magnitude < 200 and LocalPlayer.Character.Humanoid.Health ~= 0 then --// Checking if you are at spawn and not in game
 Controls:Disable()
 LocalPlayer.Character:BreakJoints()
-notify("Before Autofarming, Let me reset your Character just incase your data hasn't loaded in yet...",5,true)
+notify("Before Autofarming, Let me reset your Character just incase your data hasn't loaded in yet...",5)
 elseif (LocalPlayer.Character:WaitForChild("HumanoidRootPart").Position - workspace.Lobby.Respawn.Position).magnitude > 200 and LocalPlayer.Character.Humanoid.Health ~= 0 then
-notify("Execute when you're back at Lobby, I don't want to ruin your experience in the game...",5,true)
+notify("Execute when you're back at Lobby, I don't want to ruin your experience in the game...",5)
 return
 end
 
@@ -113,7 +111,7 @@ end)
 -- // This is how we determine when the round is over and our win was given...
 LocalPlayer.PlayerGui.ScreenGui.Sub.Stats.Rank.Winst.Changed:Connect(function(getchanged)
 if getchanged == "Text" and gameSettings.PlayerWinsText ~= LocalPlayer.PlayerGui.ScreenGui.Sub.Stats.Rank.Winst.Text and gameSettings.gameRunning and gameSettings.GotToEnd then
-notify("Round over, You have <b><font color=\"rgb(245, 205, 48)\">gained</font></b> a win...\nOld Score: "..gameSettings.PlayerWinsText.." | New Score: "..LocalPlayer.PlayerGui.ScreenGui.Sub.Stats.Rank.Winst.Text,20,true)
+notify("Round over, You have <b><font color=\"rgb(245, 205, 48)\">gained</font></b> a win...\nOld Score: "..gameSettings.PlayerWinsText.." | New Score: "..LocalPlayer.PlayerGui.ScreenGui.Sub.Stats.Rank.Winst.Text,20)
 gameSettings.gameRunning = false
 gameSettings.GotToEnd = false
 end
