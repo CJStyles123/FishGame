@@ -5,6 +5,7 @@ local PlayerModule = require(LocalPlayer.PlayerScripts:WaitForChild("PlayerModul
 local Controls = PlayerModule:GetControls()
 
 local gameSettings = {
+autoFarmReady = false,
 gameRunning = false,
 GotToEnd = false,
 PlayerWinsText,
@@ -19,6 +20,7 @@ BloodRisingEnd = CFrame.new(1595, 275, 837)
 
 local Variables = {
 GetLobby = workspace.Lobby,
+GetLobbyMagnitude = (LocalPlayer.Character:WaitForChild("HumanoidRootPart").Position - workspace.Lobby.Respawn.Position).magnitude,
 GetRLGL = workspace.Game1,
 GetRLGLClock = workspace.Game1.Clock,
 GetShapes = workspace.Game2,
@@ -47,17 +49,20 @@ Controls:Disable()
 
 LocalPlayer.Character:BreakJoints()
 notify("Before Autofarming, Let me reset your Character just incase your data hasn't loaded in yet...",5)
+game.Players.LocalPlayer.CharacterAdded:Wait()
+gameSettings.autoFarmReady = true
+
 
 -- // Teleporting to the Pad to begin Autofarm...
 RunService.RenderStepped:Connect(function()
-if (LocalPlayer.Character:WaitForChild("HumanoidRootPart").Position - Variables.GetLobby.Respawn.Position).magnitude < 200 then --// Checking if you are at spawn and not in game
+if Variables.GetLobbyMagnitude < 200 and gameSettings.autoFarmReady then --// Checking if you are at spawn and not in game
 LocalPlayer.Character.HumanoidRootPart.CFrame = gameSettings.PadCFrame
 end
 end)
 
 -- // Checking the time for Red Light, Green Light and teleporting on time...
 Variables.GetRLGLClock.SurfaceGui.Frame.Counter.Changed:Connect(function(getchanged)
-if getchanged == "Text" and Variables.GetRLGLClock.SurfaceGui.Frame.Counter.Text == gameSettings.RedLightGreenLightTime and Variables.GetLobby.Details2.SurfaceGui.Frame.Title.Text ~= "Blood Rising" and LocalPlayer.Character.Humanoid.Health ~= 0 and (LocalPlayer.Character.HumanoidRootPart.Position - Variables.GetLobby.Respawn.Position).magnitude > 200 then
+if getchanged == "Text" and Variables.GetRLGLClock.SurfaceGui.Frame.Counter.Text == gameSettings.RedLightGreenLightTime and Variables.GetLobby.Details2.SurfaceGui.Frame.Title.Text ~= "Blood Rising" and LocalPlayer.Character.Humanoid.Health ~= 0 and Variables.GetLobbyMagnitude > 200 then
 workspace["Meshes/SM_Env_Tree_Dead_04"].CanCollide = false
 LocalPlayer.Character.HumanoidRootPart.CFrame = gameSettings.TreeCFrame
 gameSettings.GotToEnd = true
@@ -67,7 +72,7 @@ end)
 
 -- // Checking the time for Shapes and teleporting on time (checks if game running here instead of collision detection for it)...
 Variables.GetShapesClock.SurfaceGui.Frame.Counter.Changed:Connect(function(getchanged)
-if getchanged == "Text" and Variables.GetShapesClock.SurfaceGui.Frame.Counter.Text == gameSettings.ShapesTime and Variables.GetLobby.Details2.SurfaceGui.Frame.Title.Text == "Day 2" and not gameSettings.gameRunning and LocalPlayer.Character.Humanoid.Health ~= 0 and (LocalPlayer.Character.HumanoidRootPart.Position - Variables.GetLobby.Respawn.Position).magnitude > 200 then
+if getchanged == "Text" and Variables.GetShapesClock.SurfaceGui.Frame.Counter.Text == gameSettings.ShapesTime and Variables.GetLobby.Details2.SurfaceGui.Frame.Title.Text == "Day 2" and not gameSettings.gameRunning and LocalPlayer.Character.Humanoid.Health ~= 0 and Variables.GetLobbyMagnitude > 200 then
 LocalPlayer.Character.HumanoidRootPart.CFrame = gameSettings.ShapeCFrame
 gameSettings.gameRunning = true
 gameSettings.GotToEnd = true
@@ -78,7 +83,7 @@ end)
 
 -- // Checking the time for Blood Rising and teleporting on time...
 Variables.GetBRClock.SurfaceGui.Frame.Counter.Changed:Connect(function(getchanged)
-if getchanged == "Text" and Variables.GetBRClock.SurfaceGui.Frame.Counter.Text == gameSettings.BloodRisingTime and Variables.GetLobby.Details2.SurfaceGui.Frame.Title.Text == "Blood Rising" and LocalPlayer.Character.Humanoid.Health ~= 0  and (LocalPlayer.Character.HumanoidRootPart.Position - Variables.GetLobby.Respawn.Position).magnitude > 200 then
+if getchanged == "Text" and Variables.GetBRClock.SurfaceGui.Frame.Counter.Text == gameSettings.BloodRisingTime and Variables.GetLobby.Details2.SurfaceGui.Frame.Title.Text == "Blood Rising" and LocalPlayer.Character.Humanoid.Health ~= 0  and Variables.GetLobbyMagnitude > 200 then
 LocalPlayer.Character.HumanoidRootPart.CFrame = gameSettings.BloodRisingEnd
 gameSettings.GotToEnd = true
 notify("Teleported to the end. Please <b><font color=\"rgb(245, 205, 48)\">WAIT</font></b> until the round is over to get your win.",15)
@@ -87,7 +92,7 @@ end)
 
 -- // RedLightGreenLight Wall CanCollide Detection...
 Variables.GetRLGL.StartWall.Changed:Connect(function(getchanged)
-if getchanged == "CanCollide" and Variables.GetRLGL.StartWall.CanCollide == false and Variables.GetLobby.Details2.SurfaceGui.Frame.Title.Text ~= "Blood Rising" and (LocalPlayer.Character.HumanoidRootPart.Position - Variables.GetLobby.Respawn.Position).magnitude > 200 then
+if getchanged == "CanCollide" and Variables.GetRLGL.StartWall.CanCollide == false and Variables.GetLobby.Details2.SurfaceGui.Frame.Title.Text ~= "Blood Rising" and Variables.GetLobbyMagnitude > 200 then
 gameSettings.gameRunning = true
 gameSettings.PlayerWinsText = LocalPlayer.PlayerGui.ScreenGui.Sub.Stats.Rank.Winst.Text
 notify("Round Started, Teleporting at <b><font color=\"rgb(245, 205, 48)\">1:30</font></b>...",50)
@@ -96,7 +101,7 @@ end)
 
 -- // BloodRising Wall CanCollide Detection...
 Variables.GetBR.StartWall2.Changed:Connect(function(getchanged)
-if getchanged == "CanCollide" and Variables.GetBR.StartWall2.CanCollide == false and Variables.GetLobby.Details2.SurfaceGui.Frame.Title.Text == "Blood Rising" and (LocalPlayer.Character.HumanoidRootPart.Position - Variables.GetLobby.Respawn.Position).magnitude > 200 then
+if getchanged == "CanCollide" and Variables.GetBR.StartWall2.CanCollide == false and Variables.GetLobby.Details2.SurfaceGui.Frame.Title.Text == "Blood Rising" and Variables.GetLobbyMagnitude > 200 then
 gameSettings.gameRunning = true
 gameSettings.PlayerWinsText = LocalPlayer.PlayerGui.ScreenGui.Sub.Stats.Rank.Winst.Text
 notify("Round Started, Teleporting at <b><font color=\"rgb(245, 205, 48)\">1:30</font></b>...",55)
