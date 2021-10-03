@@ -55,7 +55,7 @@ gameSettings.autoFarmReady = true
 
 -- // Teleporting to the Pad to begin Autofarm...
 RunService.RenderStepped:Connect(function()
-if Variables.GetLobbyMagnitude < 200 and gameSettings.autoFarmReady then --// Checking if you are at spawn and not in game
+if Variables.GetLobbyMagnitude < 200 and gameSettings.autoFarmReady then -- // Checking if you are at spawn and if autoFarm is ready
 LocalPlayer.Character.HumanoidRootPart.CFrame = gameSettings.PadCFrame
 end
 end)
