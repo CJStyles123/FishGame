@@ -94,7 +94,7 @@ Variables.GetRLGL.StartWall.Changed:Connect(function(getchanged)
 if getchanged == "CanCollide" and Variables.GetRLGL.StartWall.CanCollide == false and Variables.GetLobby.Details2.SurfaceGui.Frame.Title.Text ~= "Blood Rising" and (LocalPlayer.Character:WaitForChild("HumanoidRootPart").Position - workspace.Lobby.Respawn.Position).magnitude > 200 then
 gameSettings.gameRunning = true
 gameSettings.PlayerWinsText = LocalPlayer.PlayerGui.ScreenGui.Sub.Stats.Rank.Winst.Text
-notify("Round Started, Teleporting at <b><font color=\"rgb(245, 205, 48)\">1:35</font></b>...",45)
+notify("Round Started, Teleporting at <b><font color=\"rgb(245, 205, 48)\">1:35</font></b>...",50)
 end
 end)
 
@@ -103,7 +103,7 @@ Variables.GetBR.StartWall2.Changed:Connect(function(getchanged)
 if getchanged == "CanCollide" and Variables.GetBR.StartWall2.CanCollide == false and Variables.GetLobby.Details2.SurfaceGui.Frame.Title.Text == "Blood Rising" and (LocalPlayer.Character:WaitForChild("HumanoidRootPart").Position - workspace.Lobby.Respawn.Position).magnitude > 200 then
 gameSettings.gameRunning = true
 gameSettings.PlayerWinsText = LocalPlayer.PlayerGui.ScreenGui.Sub.Stats.Rank.Winst.Text
-notify("Round Started, Teleporting at <b><font color=\"rgb(245, 205, 48)\">1:35</font></b>...",45)
+notify("Round Started, Teleporting at <b><font color=\"rgb(245, 205, 48)\">1:35</font></b>...",50)
 end
 end)
 
