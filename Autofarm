@@ -5,13 +5,12 @@ local PlayerModule = require(LocalPlayer.PlayerScripts:WaitForChild("PlayerModul
 local Controls = PlayerModule:GetControls()
 
 local gameSettings = {
-autoFarmReady = false,
 gameRunning = false,
 GotToEnd = false,
 PlayerWinsText,
-RedLightGreenLightTime = "1:30",
+RedLightGreenLightTime = "1:35",
 ShapesTime = "0:00",
-BloodRisingTime = "1:30",
+BloodRisingTime = "1:35",
 PadCFrame = CFrame.new(-171, 13, -666),
 TreeCFrame = CFrame.new(304, 6, -1111),
 ShapeCFrame = CFrame.new(-846, 115, 491),
@@ -95,7 +94,7 @@ Variables.GetRLGL.StartWall.Changed:Connect(function(getchanged)
 if getchanged == "CanCollide" and Variables.GetRLGL.StartWall.CanCollide == false and Variables.GetLobby.Details2.SurfaceGui.Frame.Title.Text ~= "Blood Rising" and (LocalPlayer.Character:WaitForChild("HumanoidRootPart").Position - workspace.Lobby.Respawn.Position).magnitude > 200 then
 gameSettings.gameRunning = true
 gameSettings.PlayerWinsText = LocalPlayer.PlayerGui.ScreenGui.Sub.Stats.Rank.Winst.Text
-notify("Round Started, Teleporting at <b><font color=\"rgb(245, 205, 48)\">1:30</font></b>...",50)
+notify("Round Started, Teleporting at <b><font color=\"rgb(245, 205, 48)\">1:35</font></b>...",50)
 end
 end)
 
@@ -104,7 +103,7 @@ Variables.GetBR.StartWall2.Changed:Connect(function(getchanged)
 if getchanged == "CanCollide" and Variables.GetBR.StartWall2.CanCollide == false and Variables.GetLobby.Details2.SurfaceGui.Frame.Title.Text == "Blood Rising" and (LocalPlayer.Character:WaitForChild("HumanoidRootPart").Position - workspace.Lobby.Respawn.Position).magnitude > 200 then
 gameSettings.gameRunning = true
 gameSettings.PlayerWinsText = LocalPlayer.PlayerGui.ScreenGui.Sub.Stats.Rank.Winst.Text
-notify("Round Started, Teleporting at <b><font color=\"rgb(245, 205, 48)\">1:30</font></b>...",55)
+notify("Round Started, Teleporting at <b><font color=\"rgb(245, 205, 48)\">1:35</font></b>...",55)
 end
 end)
 
