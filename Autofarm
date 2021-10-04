@@ -52,6 +52,11 @@ Variables.GetShapes.DeathPit:Destroy()
 Variables.GetBR.Blood:Destroy()
 end)
 
+-- // Anti-Afk
+game:GetService("Players").LocalPlayer.Idled:connect(function()
+game:GetService("VirtualUser"):ClickButton2(Vector2.new())
+end)
+
 -- // Teleporting to the Pad to begin Autofarm...
 RunService.RenderStepped:Connect(function()
 if (LocalPlayer.Character:WaitForChild("HumanoidRootPart").Position - workspace.Lobby.Respawn.Position).magnitude < 200 and LocalPlayer.Character.Humanoid.Health ~= 0 then --// Checking if you are at spawn and not in game
